@@ -1,8 +1,12 @@
+//This program is created By Dallin.
+//This is a program that simulates a situation simmaler to the Organ Trail but in a aincent greek theme.
+
 package Game;
 
 import java.util.Scanner;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -22,6 +26,10 @@ public class Main {
     public static int Ships;
     public static int ShipCapacity = 16;
     public static int ShipCost = 1276;
+
+    public static String Name;
+    public static String Age;
+    public static String HomeLand;
 
     // Initilize Scanner and creates players citizen file.
     public static void main(String[] args) {
@@ -44,6 +52,25 @@ public class Main {
                 myscan.nextLine();
                 writeFile.write("Home Land: " + myscan.nextLine() + "\n");
                 System.out.println("Starting Game");
+
+                writeFile.flush();
+
+                // Prints back what was inputed in the Citizen.txt file.
+                try (Scanner scanner = new Scanner(citizenFile)) {
+                    for (int i = 0; i < 3; i++) {
+                        if (i == 0) {
+                            Name = scanner.nextLine();
+                        }
+                        if (i == 1) {
+                            Age = scanner.nextLine();
+                        }
+                        if (i == 2) {
+                            HomeLand = scanner.nextLine();
+                        }
+                    }
+                    System.out.println("Your name is " + Name + " and your home land is " + HomeLand
+                            + " and you are setting sail at the age of " + Age + " to help in the battle of troy.");
+                }
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
