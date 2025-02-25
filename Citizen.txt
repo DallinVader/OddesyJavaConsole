@@ -1,3 +1,0 @@
-Name: d
-Age: 1
-Home Land: d

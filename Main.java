@@ -31,9 +31,26 @@ public class Main {
     public static String Age;
     public static String HomeLand;
 
+    // School print string.
+    static String testString = "the quick Brown Fox, Jumped over the lazy dog.";
+    static String SeperatedWord = "";
+
     // Initilize Scanner and creates players citizen file.
     public static void main(String[] args) {
         myscan = new Scanner(System.in);
+
+        // Prints the string after evrey space , and . in the string
+        for (int i = 0; i < testString.length(); i++) {
+            if ((testString.charAt(i) == ' ' || testString.charAt(i) == '.' || testString.charAt(i) == ','
+                    || i >= testString.length() - 1)) {
+                if (!SeperatedWord.isEmpty()) {
+                    System.out.println(SeperatedWord);
+                }
+                SeperatedWord = "";
+            } else {
+                SeperatedWord += testString.charAt(i);
+            }
+        }
 
         File citizenFile = new File("Citizen.txt");
         try {
@@ -48,7 +65,7 @@ public class Main {
                 writeFile.write("Name: " + myscan.nextLine() + "\n");
                 System.out.println("Age");
                 writeFile.write("Age: " + myscan.nextInt() + "\n");
-                System.out.println("Home Land (Ithica or Idaho suggested)");
+                System.out.println("Home Land");
                 myscan.nextLine();
                 writeFile.write("Home Land: " + myscan.nextLine() + "\n");
                 System.out.println("Starting Game");
@@ -71,6 +88,7 @@ public class Main {
                     System.out.println("Your name is " + Name + " and your home land is " + HomeLand
                             + " and you are setting sail at the age of " + Age + " to help in the battle of troy.");
                 }
+
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
