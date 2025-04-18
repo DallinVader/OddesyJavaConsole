@@ -1,3 +1,5 @@
+
+// Made by Dallin and is a simple horse management game.
 import java.util.Random;
 import java.util.Scanner;
 
