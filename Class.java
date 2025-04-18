@@ -1,6 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
 
+//Horse Class
 class Horse {
     int ID;
     int Age;
@@ -18,6 +19,7 @@ class Horse {
 
 }
 
+// Player Class for storing coins and Owned Horses
 class Player {
     int Coins;
     Horse[] OwnedHorses;
@@ -29,15 +31,22 @@ class Player {
 }
 
 public class Class {
+    // Players in the game.
     public static Player[] Players;
+    // Number of players in the game.
     public static int NumOfPlay = 1;
 
+    // Current selected player.
     public static int P;
+
+    // Scan var for taking input.
     public static Scanner scan;
 
     public static void main(String[] args) {
+        // Initialize scan.
         scan = new Scanner(System.in);
 
+        // Sets how many players.
         System.out.println("How many players?");
         NumOfPlay = scan.nextInt();
         scan.nextLine();
@@ -48,6 +57,7 @@ public class Class {
             System.out.println("Player " + (i + 1) + " has " + Players[i].Coins + " coins.");
         }
 
+        // Sets and uses the Current player that is playing.
         while (true) {
             System.out.println("Player " + (P + 1) + " is now playing.");
             PlayerMenu(P);
@@ -59,6 +69,7 @@ public class Class {
         }
     }
 
+    // Main Menu for buying, selling, breeding and ending your turn.
     public static void PlayerMenu(int CurrentPlayer) {
         System.out.println("You have " + Players[CurrentPlayer].Coins + " coins and have "
                 + Players[CurrentPlayer].OwnedHorses.length + " Horses.");
@@ -88,38 +99,48 @@ public class Class {
             SellHorse(CurrentPlayer);
             return;
         }
+        // No function so it goes back to the while loop and moves to the next player.
         if (CurrentInput == 5) {
             return;
         }
         PlayerMenu(CurrentPlayer);
     }
 
+    // Adds a horse to the invintory of the player.
     public static void BuyHorse(int CurrentPlayer) {
+        // Intilize random var.
         Random rand = new Random();
+
+        // Subtract coins from player.
         Players[CurrentPlayer].Coins -= 50;
         System.out.println("You have bought a horse " + Players[CurrentPlayer].Coins);
 
+        // adds a horse to the array.
         Horse[] NewHorses = new Horse[Players[CurrentPlayer].OwnedHorses.length + 1];
         for (int i = 0; i < Players[CurrentPlayer].OwnedHorses.length; i++) {
             NewHorses[i] = Players[CurrentPlayer].OwnedHorses[i];
         }
         Players[CurrentPlayer].OwnedHorses = NewHorses;
-
+        // Sets a new horse with random values to the players invintory.
         Players[CurrentPlayer].OwnedHorses[Players[CurrentPlayer].OwnedHorses.length - 1] = new Horse(
                 (int) rand.nextInt(1000000),
                 rand.nextInt(10),
                 rand.nextInt(10), new Horse[0], new Horse[0]);
 
+        // Reads horses stats.
         System.out.println("Your Horse has a speed of "
                 + Players[CurrentPlayer].OwnedHorses[Players[CurrentPlayer].OwnedHorses.length - 1].Speed);
         PlayerMenu(CurrentPlayer);
     }
 
     public static void SellHorse(int CurrentPlayer) {
+        // If is 0 or less will return to menu.
         if (Players[CurrentPlayer].OwnedHorses.length <= 0) {
             PlayerMenu(CurrentPlayer);
             return;
         }
+
+        // Shows you your avaiable horses.
         System.out.println("Which Horse would you like to sell?");
         System.out.println("0: Exit");
         int Num = 0;
@@ -131,15 +152,18 @@ public class Class {
             System.out.println(Num + ": " + CurrentHorse.ID);
         }
 
+        // Inputed value.
         int NextInt = scan.nextInt();
         scan.nextLine();
+
+        // Exits if inputed value is 0.
         if (NextInt == 0) {
             PlayerMenu(CurrentPlayer);
             return;
         }
 
+        // Removes the horse dynamicaly from the array of owned horses.
         Horse[] NewOwnedHorses = new Horse[Players[CurrentPlayer].OwnedHorses.length - 1];
-
         for (int i = 0, i2 = 0; i < Players[CurrentPlayer].OwnedHorses.length; i++) {
             if (i == NextInt - 1) {
                 continue;
@@ -147,8 +171,9 @@ public class Class {
             NewOwnedHorses[i2] = Players[CurrentPlayer].OwnedHorses[i];
             i2++;
         }
-
         Players[CurrentPlayer].OwnedHorses = NewOwnedHorses;
+
+        // Adds coins to the player.
         Players[CurrentPlayer].Coins += 35;
 
         PlayerMenu(CurrentPlayer);
@@ -156,19 +181,24 @@ public class Class {
     }
 
     public static void LookAtHorse(int CurrentPlayer) {
+
         System.out.println("Which Horse would you like to look at?");
         System.out.println("0: Exit");
+
+        // Shows you your avaiable horses.
         int Num = 0;
         for (Horse CurrentHorse : Players[CurrentPlayer].OwnedHorses) {
             Num++;
             System.out.println(Num + ": " + CurrentHorse.ID);
         }
+        // Goes to main menu if you have no horses.
         if (Num == 0) {
             System.out.println("No Horses to look at");
             PlayerMenu(CurrentPlayer);
             return;
         }
 
+        // Player Input.
         int Input = scan.nextInt();
         scan.nextLine();
 
@@ -177,9 +207,11 @@ public class Class {
             return;
         }
 
+        // Grabs and prints selected horses stats.
         Horse HorseHolder = Players[CurrentPlayer].OwnedHorses[(Input - 1)];
         System.out.println("ID: " + HorseHolder.ID + " Age: " + HorseHolder.Age + " Speed: " + HorseHolder.Speed);
 
+        // Prints Selected horses parents.
         if (HorseHolder.Parents.length > 0) {
             System.out
                     .println("Parent 1 ID: " + HorseHolder.Parents[0].ID + " Age:" + HorseHolder.Parents[0].Age
@@ -194,6 +226,7 @@ public class Class {
             System.out.println("No Record of horses parents.");
         }
 
+        // Prints Selected horses children.
         if (HorseHolder.Children.length > 0) {
             int H = 0;
             for (Horse HorseChild : HorseHolder.Children) {
@@ -204,10 +237,15 @@ public class Class {
         } else {
             System.out.println("No Record of horses Children.");
         }
+
+        // Restarts from LookAtHorse so they can select another easyer.
         LookAtHorse(CurrentPlayer);
     }
 
+    // Breeds two horses and adds it to the players invintory.
     public static void BreedHorses(int CurrentPlayer) {
+
+        // Checks if you have 2 horses to breed.
         if (Players[CurrentPlayer].OwnedHorses.length < 2) {
             System.out.println("You do not have enough horses.");
             PlayerMenu(CurrentPlayer);
@@ -216,29 +254,39 @@ public class Class {
 
         System.out.println("Which horses would you like to breed? You have " + Players[CurrentPlayer].OwnedHorses.length
                 + " horses");
+
+        // Input for selecting the horse you want to breed.
         int FirstInput = scan.nextInt();
         scan.nextLine();
+
         System.out.println("Horse " + FirstInput + " selected.");
 
+        // Second input for selecting the 2nd horse you want to breed.
         int SecondInput = scan.nextInt();
         scan.nextLine();
+
         System.out.println("Horse " + SecondInput + " selected.");
 
+        // Grabs the two selected horses.
         Horse Parent1 = Players[CurrentPlayer].OwnedHorses[FirstInput - 1];
         Horse Parent2 = Players[CurrentPlayer].OwnedHorses[SecondInput - 1];
+        // I got redundent with the variables but that can be fixed fairly easy later.
         Horse[] HorseParents = new Horse[2];
         HorseParents[0] = Parent1;
         HorseParents[1] = Parent2;
 
         Random rand = new Random();
+
         System.out.println("You have Gained a horse.");
 
+        // Adds a extra slot for adding the new hors to the array.
         Horse[] NewHorses = new Horse[Players[CurrentPlayer].OwnedHorses.length + 1];
         for (int i = 0; i < Players[CurrentPlayer].OwnedHorses.length; i++) {
             NewHorses[i] = Players[CurrentPlayer].OwnedHorses[i];
         }
         Players[CurrentPlayer].OwnedHorses = NewHorses;
 
+        // Creates new horse with stat influence from parents.
         Horse NewHorse = new Horse(
                 (int) rand.nextInt(1000000),
                 rand.nextInt((int) ((HorseParents[0].Speed + HorseParents[1].Speed) * 0.7f)), 0,
@@ -246,6 +294,7 @@ public class Class {
 
         Players[CurrentPlayer].OwnedHorses[Players[CurrentPlayer].OwnedHorses.length - 1] = NewHorse;
 
+        // Adds NewHorse to the first parent.
         Horse[] P1TempChildren = Parent1.Children;
         Parent1.Children = new Horse[Parent1.Children.length + 1];
         for (int i = 0; i < P1TempChildren.length; i++) {
@@ -253,6 +302,7 @@ public class Class {
         }
         Parent1.Children[Parent1.Children.length - 1] = NewHorse;
 
+        // Adds NewHorse to the second parent.
         Horse[] P2TempChildren = Parent2.Children;
         Parent2.Children = new Horse[Parent2.Children.length + 1];
         for (int i = 0; i < P2TempChildren.length; i++) {
@@ -260,6 +310,7 @@ public class Class {
         }
         Parent2.Children[Parent1.Children.length - 1] = NewHorse;
 
+        // Display horses stats.
         System.out.println("Your Horse has a speed of "
                 + NewHorse.Speed + " and is " + NewHorse.Age + " years old.");
         System.out.println("Your Horses parents are " + NewHorse.Parents[0].ID + " and " + NewHorse.Parents[1].ID);
